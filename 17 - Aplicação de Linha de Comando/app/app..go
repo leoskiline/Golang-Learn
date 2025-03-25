@@ -1,6 +1,12 @@
 package app
 
-import "github.com/urfave/cli"
+import (
+	"fmt"
+	"log"
+	"net"
+
+	"github.com/urfave/cli"
+)
 
 // Gerar retorna uma nova aplicação de linha de comando
 func Gerar() *cli.App {
@@ -27,14 +33,13 @@ func Gerar() *cli.App {
 
 func buscarIps(c *cli.Context) {
 	host := c.String("host")
-	ips, erro := BuscarIpsDoServidor(host)
+	ips, erro := net.LookupIP(host)
 	if erro != nil {
-		c.App.Writer.Write([]byte("Ocorreu um erro ao buscar os IPs do servidor: " + erro.Error()))
-		return
+		log.Fatal(erro)
 	}
 
 	for _, ip := range ips {
-		c.App.Writer.Write([]byte(ip + "\n"))
+		fmt.Println(ip)
 	}
 
 }
